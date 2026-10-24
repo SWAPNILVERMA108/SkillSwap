@@ -309,7 +309,7 @@ http://127.0.0.1:8001/
 
 **Swapnil Verma**
 
-GitHub: https://github.com/YOUR_USERNAME
+GitHub: https://github.com/SWAPNILVERMA108/SkillSwap.git
 
 ---
 
