@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Register | SkillSwap{% endblock %}
+{% block content %}
+<h1>Create account</h1>
+<form method="post" class="form-card">
+  {% csrf_token %}{{ form.as_p }}
+  <button type="submit">Register</button>
+</form>
+<p class="muted">Already registered? <a href="{% url 'accounts:login' %}">Login</a>.</p>
+{% endblock %}

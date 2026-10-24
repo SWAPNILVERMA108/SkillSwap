@@ -1,0 +1,11 @@
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - skillswap_redis_data:/data
+volumes:
+  skillswap_redis_data:

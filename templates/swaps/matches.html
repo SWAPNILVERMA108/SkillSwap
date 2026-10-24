@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Matches | SkillSwap{% endblock %}
+{% block content %}
+<h1>Your matches</h1>
+{% if need_skills %}
+  <div class="card"><p>Add at least one skill you teach and one skill you want to learn to see mutual matches.</p>
+  <a href="{% url 'accounts:profile' %}">Update profile</a></div>
+{% elif matches %}
+  {% for match in matches %}
+    <section class="card">
+      <h2>{{ match.user.username }}</h2>
+      {% if match.user.bio %}<p>{{ match.user.bio }}</p>{% endif %}
+      <p class="muted">Mutual skill pairs:</p>
+      {% for offered, wanted in match.pairs %}
+        <form method="post" action="{% url 'swaps:send_request' %}" class="swap-pair">
+          {% csrf_token %}
+          <input type="hidden" name="to_user" value="{{ match.user.id }}">
+          <input type="hidden" name="skill_offered" value="{{ offered.id }}">
+          <input type="hidden" name="skill_wanted" value="{{ wanted.id }}">
+          <span>You teach <strong>{{ offered.name }}</strong>; they teach <strong>{{ wanted.name }}</strong> {% for skill in match.can_teach %}{% if skill.id == wanted.id %}<small class="muted">· Rating: {% if skill.avg_rating %}{{ skill.avg_rating|floatformat:1 }}/5 ({{ skill.rating_count }} reviews){% else %}No ratings yet{% endif %}</small>{% endif %}{% endfor %}</span>
+          <input type="text" name="message" maxlength="500" placeholder="Optional message">
+          <button type="submit">Request swap</button>
+        </form>
+      {% endfor %}
+    </section>
+  {% endfor %}
+{% else %}
+  <div class="card"><p>No mutual matches yet. Add more skills or check back later.</p></div>
+{% endif %}
+{% endblock %}

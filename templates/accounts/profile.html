@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Profile | SkillSwap{% endblock %}
+{% block content %}
+<h1>Your profile</h1>
+<section class="profile-hero card">
+  {% if user.profile_picture %}
+    <img class="profile-avatar" src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile picture">
+  {% else %}
+    <div class="profile-avatar profile-avatar-placeholder" aria-label="No profile picture">{{ user.username|first|upper }}</div>
+  {% endif %}
+  <div class="profile-identity">
+    <h2>{{ user.username }}</h2>
+    <p>{{ user.email|default:"Email not added" }}</p>
+  </div>
+</section>
+<section class="form-card"><h2>Profile details</h2><form method="post" enctype="multipart/form-data">{% csrf_token %}<input type="hidden" name="action" value="details">{{ details_form.as_p }}<button type="submit">Save profile</button></form></section>
+<section class="form-card"><h2>Add a skill</h2><form method="post">{% csrf_token %}<input type="hidden" name="action" value="skill">{{ form.as_p }}<button type="submit">Add skill</button></form></section>
+<div class="columns"><section class="card"><h2>Skills you teach</h2><ul class="skill-list">{% for item in teach %}<li><strong>{{ item.skill.name }}</strong> <span class="muted">{{ item.get_level_display }}</span><form method="post" action="{% url 'accounts:remove_skill' item.pk %}" class="inline">{% csrf_token %}<button class="link-button danger" type="submit">Remove</button></form></li>{% empty %}<li class="muted">None yet.</li>{% endfor %}</ul></section>
+<section class="card"><h2>Skills you want to learn</h2><ul class="skill-list">{% for item in learn %}<li><strong>{{ item.skill.name }}</strong> <span class="muted">{{ item.get_level_display }}</span><form method="post" action="{% url 'accounts:remove_skill' item.pk %}" class="inline">{% csrf_token %}<button class="link-button danger" type="submit">Remove</button></form></li>{% empty %}<li class="muted">None yet.</li>{% endfor %}</ul></section></div>
+<section class="form-card"><h2>Add certification</h2><form method="post">{% csrf_token %}<input type="hidden" name="action" value="certification">{{ cert_form.as_p }}<button type="submit">Add certification</button></form><h3>Your certifications</h3>{% for cert in certifications %}<div class="cert-row"><strong>{{ cert.name }}</strong>{% if cert.issuer %} — {{ cert.issuer }}{% endif %}{% if cert.credential_url %}<a href="{{ cert.credential_url }}" target="_blank" rel="noopener noreferrer">View credential</a>{% endif %}<form method="post" action="{% url 'accounts:remove_certification' cert.pk %}" class="inline">{% csrf_token %}<button class="link-button danger">Remove</button></form></div>{% empty %}<p class="muted">No certifications added yet.</p>{% endfor %}</section>
+<section class="card"><h2>Privacy: blocked users</h2>{% for block in user.blocks_made.all %}<p>{{ block.blocked.username }} <form class="inline" method="post" action="{% url 'accounts:unblock_user' block.blocked_id %}">{% csrf_token %}<button>Unblock</button></form></p>{% empty %}<p class="muted">You have not blocked anyone.</p>{% endfor %}</section>
+<p><a href="{% url 'swaps:matches' %}">Find matches →</a></p>
+{% endblock %}
