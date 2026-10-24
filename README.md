@@ -56,7 +56,7 @@ SkillSwap/
 Replace the example URL with your actual GitHub repository URL.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+git clone https://github.com/SWAPNILVERMA108/SkillSwap.git
 cd YOUR_REPOSITORY
 ```
 
